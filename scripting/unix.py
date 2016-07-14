@@ -19,6 +19,23 @@ def is_unix():
     return is_linux() or is_osx()
 
 
+def is_executable(prog):
+    """Check if a program is executable.
+
+    Parameters
+    ----------
+    prog : str
+        Name of the program to test.
+
+    Returns
+    -------
+    bool
+        True if the program is executable.
+
+    """
+    return os.path.isfile(prog) and os.access(prog, os.X_OK)
+
+
 def which(prog, env=None):
     """Find path to a program.
 

@@ -67,3 +67,57 @@ def checksum(path):
     return hasher.hexdigest()
 
 
+def wc_l(fname, with_wc='wc'):
+    """Count the lines in a file.
+
+    Parameters
+    ----------
+    fname : str
+        File name.
+    with_wc : str, optional
+        The 'wc' command to use (default is `wc`).
+
+    Returns
+    -------
+    int
+        Number of lines in file, or None on error.
+
+    """
+    try:
+        n_lines = subprocess.check_output(
+            [with_wc, '-l', fname])
+    except Exception:
+        raise
+    else:
+        return int(n_lines.split()[0])
+
+
+def tail(fname, n=10, with_tail='tail'):
+    """Get the last lines in a file.
+
+    Parameters
+    ----------
+    fname : str
+        File name.
+    n : int, optional
+        Number of lines to get (default is 10).
+    with_tail : str, optional
+        The 'tail' command to use (default is `tail`).
+
+    Returns
+    -------
+    str
+        The last lines in file, or None on error.
+
+    """
+    fname = os.path.abspath(fname)
+    try:
+        lines = subprocess.check_output(
+            [with_tail, '-n{n}'.format(n=n), fname])
+    except subprocess.CalledProcessError:
+        raise RuntimeError('Unable to get status. Please try again.')
+    except Exception:
+        raise
+    else:
+        return lines.strip()
+

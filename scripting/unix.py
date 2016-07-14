@@ -1,5 +1,8 @@
 #! /usr/bin/env python
+from __future__ import print_function
+
 import os
+import sys
 import subprocess
 import platform
 
@@ -34,6 +37,41 @@ def is_executable(prog):
 
     """
     return os.path.isfile(prog) and os.access(prog, os.X_OK)
+
+
+def status(message):
+    """Print a status message.
+
+    Parameters
+    ----------
+    message : str
+        The message to display.
+
+    """
+    print(' '.join(['==>', message]), file=sys.stderr)
+
+
+def check_output(*args, **kwds):
+    kwds.setdefault('stdout', subprocess.PIPE)
+    return subprocess.Popen(*args, **kwds).communicate()[0]
+
+
+def system(*args, **kwds):
+    verbose = kwds.pop('verbose', True)
+    kwds.setdefault('stdout', sys.stderr)
+
+    status(' '.join(args[0]))
+
+    if verbose:
+        call = subprocess.check_call
+    else:
+        call = check_output
+
+    try:
+        call(*args, **kwds)
+    except subprocess.CalledProcessError:
+        status('Error')
+        raise
 
 
 def which(prog, env=None):

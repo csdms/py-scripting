@@ -159,3 +159,15 @@ def tail(fname, n=10, with_tail='tail'):
     else:
         return lines.strip()
 
+
+def hostname():
+    """Get the name of the host system.
+
+    Returns
+    -------
+    str
+        The domain name of the current host.
+
+    """
+    import socket
+    return socket.getfqdn()

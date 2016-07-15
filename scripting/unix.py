@@ -1,5 +1,8 @@
 #! /usr/bin/env python
+from __future__ import print_function
+
 import os
+import sys
 import subprocess
 import platform
 
@@ -17,6 +20,58 @@ def is_osx():
 def is_unix():
     """Check if machine is either Linux or OSX."""
     return is_linux() or is_osx()
+
+
+def is_executable(prog):
+    """Check if a program is executable.
+
+    Parameters
+    ----------
+    prog : str
+        Name of the program to test.
+
+    Returns
+    -------
+    bool
+        True if the program is executable.
+
+    """
+    return os.path.isfile(prog) and os.access(prog, os.X_OK)
+
+
+def status(message):
+    """Print a status message.
+
+    Parameters
+    ----------
+    message : str
+        The message to display.
+
+    """
+    print(' '.join(['==>', message]), file=sys.stderr)
+
+
+def check_output(*args, **kwds):
+    kwds.setdefault('stdout', subprocess.PIPE)
+    return subprocess.Popen(*args, **kwds).communicate()[0]
+
+
+def system(*args, **kwds):
+    verbose = kwds.pop('verbose', True)
+    kwds.setdefault('stdout', sys.stderr)
+
+    status(' '.join(args[0]))
+
+    if verbose:
+        call = subprocess.check_call
+    else:
+        call = check_output
+
+    try:
+        call(*args, **kwds)
+    except subprocess.CalledProcessError:
+        status('Error')
+        raise
 
 
 def which(prog, env=None):
@@ -50,3 +105,69 @@ def checksum(path):
     return hasher.hexdigest()
 
 
+def wc_l(fname, with_wc='wc'):
+    """Count the lines in a file.
+
+    Parameters
+    ----------
+    fname : str
+        File name.
+    with_wc : str, optional
+        The 'wc' command to use (default is `wc`).
+
+    Returns
+    -------
+    int
+        Number of lines in file, or None on error.
+
+    """
+    try:
+        n_lines = subprocess.check_output(
+            [with_wc, '-l', fname])
+    except Exception:
+        raise
+    else:
+        return int(n_lines.split()[0])
+
+
+def tail(fname, n=10, with_tail='tail'):
+    """Get the last lines in a file.
+
+    Parameters
+    ----------
+    fname : str
+        File name.
+    n : int, optional
+        Number of lines to get (default is 10).
+    with_tail : str, optional
+        The 'tail' command to use (default is `tail`).
+
+    Returns
+    -------
+    str
+        The last lines in file, or None on error.
+
+    """
+    fname = os.path.abspath(fname)
+    try:
+        lines = subprocess.check_output(
+            [with_tail, '-n{n}'.format(n=n), fname])
+    except subprocess.CalledProcessError:
+        raise RuntimeError('Unable to get status. Please try again.')
+    except Exception:
+        raise
+    else:
+        return lines.strip()
+
+
+def hostname():
+    """Get the name of the host system.
+
+    Returns
+    -------
+    str
+        The domain name of the current host.
+
+    """
+    import socket
+    return socket.getfqdn()

@@ -174,7 +174,7 @@ def hostname():
     return socket.getfqdn()
 
 
- def glob_cp(pattern, dest):
+def glob_cp(pattern, dest):
     if not os.path.isdir(dest):
         raise ValueError('{dest}: not a directory'.format(dest=dest))
 

@@ -12,3 +12,4 @@ requirements:
     - nose
   run:
     - python
+    - nose

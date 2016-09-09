@@ -1,0 +1,24 @@
+env:
+  matrix:
+  - TRAVIS_PYTHON_VERSION="2.7"
+  global:
+    secure: ia+3Wgjj5fv//9HZiH/Sr8x9yYu4eWYgnxDX7vGHf02bPlm7tqbFrdyxdr6bUoDqvI/0F+Iw4eAOYOUcJ2kE5jzUcuvJygyK1kXwdVtQq00kioFNm25IMCkVfj1XFD2O4dDlqJbbuW/+9JgBs4M/uWfRPL/oMB/DAl+fhCn4VeA=
+os:
+- linux
+- osx
+sudo: false
+install:
+- echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
+- if [[ "$TRAVIS_TAG" == v* ]]; then export BUILD_STR=""; else export BUILD_STR="dev";
+  fi
+- bash .ci/travis/install_python.sh $HOME/miniconda
+- export PATH="$HOME/miniconda/bin:$PATH"
+- conda info -a
+- conda build -q conda-recipe -c csdms
+- conda install -q scripting --use-local -c csdms
+- pip install coveralls
+script:
+- nosetests --with-doctest --with-coverage --cover-package=scripting scripting
+after_success:
+- coveralls --verbose
+- bash .ci/travis/deploy_to_anaconda.sh scripting

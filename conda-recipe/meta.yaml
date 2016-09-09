@@ -9,5 +9,6 @@ requirements:
   build:
     - setuptools
     - python
+    - nose
   run:
     - python

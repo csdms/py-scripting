@@ -13,7 +13,7 @@ class cd(object):
     Examples
     --------
     >>> import os, tempfile
-    >>> from landlab.testing.tools import cd
+    >>> from scripting.contexts import cd
 
     Create a temporary directory for testing.
 
@@ -66,7 +66,7 @@ class cdtemp(object):
     Examples
     --------
     >>> import os
-    >>> from landlab.testing.tools import cdtemp
+    >>> from scripting.contexts import cdtemp
 
     Change to the newly-created temporary directory after entering the
     context. Upon exiting, remove the temporary directory and return to the

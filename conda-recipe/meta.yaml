@@ -1,0 +1,13 @@
+package:
+  name: scripting
+  version: "0.1"
+
+source:
+  path: ..
+
+requirements:
+  build:
+    - setuptools
+    - python
+  run:
+    - python

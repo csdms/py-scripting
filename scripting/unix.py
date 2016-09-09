@@ -5,6 +5,7 @@ import os
 import sys
 import subprocess
 import platform
+import shutil
 
 
 def is_linux():
@@ -171,3 +172,12 @@ def hostname():
     """
     import socket
     return socket.getfqdn()
+
+
+ def glob_cp(pattern, dest):
+    if not os.path.isdir(dest):
+        raise ValueError('{dest}: not a directory'.format(dest=dest))
+
+    for fname in glob.glob(pattern):
+        status('cp {src} {dest}'.format(src=fname, dest=dest))
+        shutil.copy2(fname, dest)

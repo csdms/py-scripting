@@ -1,9 +1,41 @@
 #! /usr/bin/env python
 import os
+import sys
 import shutil
 import tempfile
 
 from distutils.dir_util import mkpath
+
+
+class homebrew_hidden(object):
+
+    """Context that temporarily hides the homebrew folders on Mac."""
+
+    def __init__(self, prefix='/usr/local', prompt=False):
+        self._prefix = prefix
+        self._folders = ('bin', 'lib', 'include', )
+        self._folders_hidden = set()
+
+    def __enter__(self):
+        folders_to_hide = set()
+        if sys.platform == 'darwin':
+            # ok_to_move = raw_input('OK to move folders [y/n]? ') or 'y'
+            # if ok_to_move == 'y':
+            for folder in self._folders:
+                orig = os.path.join(self._prefix, folder)
+                folders_to_hide.add((orig, orig + '.hide'))
+
+        for (orig, hidden) in folders_to_hide:
+            try:
+                shutil.move(orig, hidden)
+            except Exception:
+                pass
+            else:
+                self._folders_hidden.add((orig, hidden))
+
+    def __exit__(self, ex_type, ex_value, traceback):
+        for (orig, hidden) in self._folders_hidden:
+            shutil.move(hidden, orig)
 
 
 class cd(object):
@@ -45,12 +77,13 @@ class cd(object):
     True
     """
 
-    def __init__(self, path_to_dir):
-        self._dir = path_to_dir
+    def __init__(self, path_to_dir, create=True):
+        self._dir = os.path.expanduser(path_to_dir)
+        self._create = create
 
     def __enter__(self):
         self._starting_dir = os.path.abspath(os.getcwd())
-        if not os.path.isdir(self._dir):
+        if not os.path.isdir(self._dir) and self._create:
             mkpath(self._dir)
         os.chdir(self._dir)
         return os.path.abspath(os.getcwd())

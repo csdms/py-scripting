@@ -2,7 +2,7 @@
 import os
 import subprocess
 
-from .unix import is_linux, checksum
+from .unix import is_linux, is_osx, checksum
 from .url import download_url
 from .contexts import cd
 

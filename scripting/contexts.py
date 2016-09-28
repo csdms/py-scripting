@@ -6,6 +6,7 @@ import tempfile
 
 from distutils.dir_util import mkpath
 from .prompting import status, prompt
+from .termcolors import blue
 
 
 class homebrew_hidden(object):
@@ -152,17 +153,33 @@ def _reset_env(keep=None, env=None):
         os.environ.update(env)
 
 
+def env_to_str(env=None):
+    env = env or os.environ
+
+    lines = []
+    keys = list(env.keys())
+    keys.sort()
+    for key in keys:
+        lines.append('{k}={v}'.format(k=key, v=env[key]))
+
+    return os.linesep.join(lines)
+
 
 class setenv(object):
 
     """Context that sets up a new environment."""
 
-    def __init__(self, env):
+    def __init__(self, env, verbose=False):
         self._env = env
+        self._verbose = verbose
 
     def __enter__(self):
         self._starting_env = os.environ.copy()
         _reset_env(env=self._env)
+
+        if self._verbose:
+            status('switching to this environment:')
+            print(blue(env_to_str()))
 
     def __exit__(self, type, value, traceback):
         _reset_env(env=self._starting_env)

@@ -7,6 +7,8 @@ import subprocess
 import platform
 import shutil
 
+from .prompting import error, status
+
 
 def is_linux():
     """Check if machine is linux."""
@@ -40,18 +42,6 @@ def is_executable(prog):
     return os.path.isfile(prog) and os.access(prog, os.X_OK)
 
 
-def status(message):
-    """Print a status message.
-
-    Parameters
-    ----------
-    message : str
-        The message to display.
-
-    """
-    print(' '.join(['==>', message]), file=sys.stderr)
-
-
 def check_output(*args, **kwds):
     kwds.setdefault('stdout', subprocess.PIPE)
     return subprocess.Popen(*args, **kwds).communicate()[0]
@@ -71,7 +61,7 @@ def system(*args, **kwds):
     try:
         call(*args, **kwds)
     except subprocess.CalledProcessError:
-        status('Error')
+        error('Unable to run command: {cmd}'.format(cmd=' '.join(args[0])))
         raise
 
 

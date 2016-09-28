@@ -5,6 +5,7 @@ import shutil
 import tempfile
 
 from distutils.dir_util import mkpath
+from .prompting import status, prompt
 
 
 class homebrew_hidden(object):
@@ -15,15 +16,15 @@ class homebrew_hidden(object):
         self._prefix = prefix
         self._folders = ('bin', 'lib', 'include', )
         self._folders_hidden = set()
+        self._prompt = prompt
 
     def __enter__(self):
         folders_to_hide = set()
         if sys.platform == 'darwin':
-            # ok_to_move = raw_input('OK to move folders [y/n]? ') or 'y'
-            # if ok_to_move == 'y':
-            for folder in self._folders:
-                orig = os.path.join(self._prefix, folder)
-                folders_to_hide.add((orig, orig + '.hide'))
+            if not self._prompt or prompt('OK to hide homebrew folders'):
+                for folder in self._folders:
+                    orig = os.path.join(self._prefix, folder)
+                    folders_to_hide.add((orig, orig + '.hide'))
 
         for (orig, hidden) in folders_to_hide:
             try:
@@ -31,10 +32,12 @@ class homebrew_hidden(object):
             except Exception:
                 pass
             else:
+                status('moving: {src} -> {dest}'.format(src=orig, dest=hidden))
                 self._folders_hidden.add((orig, hidden))
 
     def __exit__(self, ex_type, ex_value, traceback):
         for (orig, hidden) in self._folders_hidden:
+            status('moving: {dest} -> {src}'.format(src=orig, dest=hidden))
             shutil.move(hidden, orig)
 
 

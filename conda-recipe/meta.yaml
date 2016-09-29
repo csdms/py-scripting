@@ -10,6 +10,7 @@ requirements:
     - setuptools
     - python
     - nose
+    - pbr
   run:
     - python
     - nose

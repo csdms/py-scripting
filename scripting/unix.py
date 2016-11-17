@@ -7,6 +7,7 @@ import subprocess
 import platform
 import shutil
 import glob
+import re
 
 from .prompting import error, status
 
@@ -120,6 +121,42 @@ def wc_l(fname, with_wc='wc'):
         raise
     else:
         return int(n_lines.split()[0])
+
+
+def sensible_name_sort(names):
+    """Sort names with numbers in counting order.
+
+    Parameters
+    ----------
+    names : iterable of str
+        Names to sort.
+
+    Returns
+    -------
+    iterable of str
+        Sort names.
+
+    Examples
+    --------
+    >>> from scripting.unix import sensible_name_sort
+    >>> sensible_name_sort(['file1.txt', 'file10.txt', 'file2.txt'])
+    ['file1.txt', 'file2.txt', 'file10.txt']
+    """
+    regex = regex or '(?P<prefix>[\D]*)(?P<num>[\d]*)(?P<suffix>[\D]*)'
+    p = re.compile(regex)
+
+    keys = []
+    for name in names:
+        m = p.match(name)
+        try:
+            key = int(m.group('num'))
+        except ValueError:
+            key = 0
+        finally:
+            keys.append((key, name))
+
+    keys.sort()
+    return [key[1] for key in keys]
 
 
 def tail(fname, n=10, with_tail='tail'):

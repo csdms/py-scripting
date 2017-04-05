@@ -14,3 +14,4 @@ requirements:
   run:
     - python
     - nose
+    - six

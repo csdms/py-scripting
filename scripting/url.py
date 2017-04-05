@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 import os
-import urllib2
 import shutil
+
+from six.moves import urllib
 
 
 def download_url(url, dest, md5=None, cache='.'):
@@ -14,10 +15,10 @@ def download_url(url, dest, md5=None, cache='.'):
             os.remove(dest)
 
     try:
-        response = urllib2.urlopen(url)
-    except urllib2.HTTPError as error:
+        response = urllib.request.urlopen(url)
+    except urllib.error.HTTPError as error:
         raise
-    except urllib2.URLError as error:
+    except urllib.error.URLError as error:
         raise
     else:
         with open(dest, 'w') as destination:

@@ -119,6 +119,7 @@ class cdtemp(object):
     """
 
     def __init__(self, **kwds):
+        self._cleanup = kwds.pop('cleanup', True)
         self._kwds = kwds
         self._tmp_dir = None
 
@@ -130,7 +131,8 @@ class cdtemp(object):
 
     def __exit__(self, ex_type, ex_value, traceback):
         os.chdir(self._starting_dir)
-        shutil.rmtree(self._tmp_dir)
+        if self._cleanup:
+            shutil.rmtree(self._tmp_dir)
 
 
 def _reset_env(keep=None, env=None):

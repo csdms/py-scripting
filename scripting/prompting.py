@@ -13,6 +13,13 @@ RIGHT_BACKWARDS_ARROW = u'\u27a1'
 RAISED_HAND = u'\u270B'
 
 
+def term_print(string, **kwds):
+    try:
+        print(string, **kwds)
+    except UnicodeEncodeError:
+        print(string.encode('utf-8'), **kwds)
+
+
 def prompt(msg, default=None, batch_mode=False):
     if not isinstance(default, (type(None), bool)):
         raise ValueError('default not bool or None')
@@ -27,7 +34,7 @@ def prompt(msg, default=None, batch_mode=False):
 
     resp = None
     while not isinstance(resp, bool):
-        print(green(RAISED_HAND), end=' ')
+        term_print(green(RAISED_HAND), end=' ')
         resp = raw_input(msg) or default
         if resp in ('y', 'n'):
             resp = (resp == 'y')
@@ -44,8 +51,8 @@ def status(message):
         The message to display.
 
     """
-    print(yellow(' '.join([RIGHT_BACKWARDS_ARROW, message])),
-          file=sys.stderr)
+    term_print(yellow(' '.join([RIGHT_BACKWARDS_ARROW, message])),
+               file=sys.stderr)
 
 
 def success(message):
@@ -57,8 +64,7 @@ def success(message):
         The message to display.
 
     """
-    print(green(' '.join([CHECK_MARK, message])),
-          file=sys.stderr)
+    term_print(green(' '.join([CHECK_MARK, message])), file=sys.stderr)
 
 
 def error(message):
@@ -70,4 +76,4 @@ def error(message):
         The message to display.
 
     """
-    print(red(' '.join([BALLOT_X, message])), file=sys.stderr)
+    term_print(red(' '.join([BALLOT_X, message])), file=sys.stderr)

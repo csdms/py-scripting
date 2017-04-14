@@ -10,6 +10,7 @@ QUESTION_MARK = u'\u2753'
 CHECK_MARK = u'\u2713'
 BALLOT_X = u'\u2717'
 RIGHT_BACKWARDS_ARROW = u'\u27a1'
+RAISED_HAND = u'\u270B'
 
 
 def prompt(msg, default=None, batch_mode=False):
@@ -26,7 +27,7 @@ def prompt(msg, default=None, batch_mode=False):
 
     resp = None
     while not isinstance(resp, bool):
-        print(green(RIGHT_BACKWARDS_ARROW), end=' ')
+        print(green(RAISED_HAND), end=' ')
         resp = raw_input(msg) or default
         if resp in ('y', 'n'):
             resp = (resp == 'y')
@@ -43,7 +44,8 @@ def status(message):
         The message to display.
 
     """
-    print(yellow(' '.join([RIGHT_BACKWARDS_ARROW, message])), file=sys.stderr)
+    print(yellow(' '.join([RIGHT_BACKWARDS_ARROW, message])),
+          file=sys.stderr)
 
 
 def success(message):
@@ -55,7 +57,8 @@ def success(message):
         The message to display.
 
     """
-    print(green(' '.join([CHECK_MARK, message])), file=sys.stderr)
+    print(green(' '.join([CHECK_MARK, message])),
+          file=sys.stderr)
 
 
 def error(message):

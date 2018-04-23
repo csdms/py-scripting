@@ -3,10 +3,20 @@ import os
 import sys
 import shutil
 import tempfile
+import errno
 
-from distutils.dir_util import mkpath
 from .prompting import status, prompt
 from .termcolors import blue
+
+
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 
 class homebrew_hidden(object):
@@ -87,9 +97,10 @@ class cd(object):
 
     def __enter__(self):
         self._starting_dir = os.path.abspath(os.getcwd())
-        if not os.path.isdir(self._dir) and self._create:
-            mkpath(self._dir)
+        if self._create:
+            mkdir_p(self._dir)
         os.chdir(self._dir)
+
         return os.path.abspath(os.getcwd())
 
     def __exit__(self, ex_type, ex_value, traceback):
@@ -185,3 +196,11 @@ class setenv(object):
 
     def __exit__(self, type, value, traceback):
         _reset_env(env=self._starting_env)
+
+
+class empty_env(setenv):
+    def __init__(self, verbose=False):
+        env = {
+            'PATH': os.pathsep.join(['/usr/bin', '/bin', '/usr/sbin', '/etc',
+                                     '/usr/lib', ]), }
+        super(empty_env, self).__init__(env, verbose=verbose)

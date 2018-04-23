@@ -10,6 +10,7 @@ import glob
 import re
 
 from .prompting import error, status
+from .contexts import cd
 
 
 def is_linux():
@@ -209,3 +210,38 @@ def glob_cp(pattern, dest):
     for fname in glob.glob(pattern):
         status('cp {src} {dest}'.format(src=fname, dest=dest))
         shutil.copy2(fname, dest)
+
+
+def cp(source, dest, dry_run=False, clobber=True, create_dirs=False,
+       silent=False):
+    """Copy file from source to destination.
+
+    Parameters
+    ----------
+    source : str
+        Path to source file.
+    dest : str
+        Path to destination directory or destination file name.
+    dry_run : bool, optional
+        Print what would have been done, but don't do it.
+    clobber : bool, optional
+        If destination file exists, overwrite it. Otherwise raise
+        an exception.
+    create_dirs : bool, optional
+        Create intermediate directories if they don't already exist.
+        Otherwise, raise an exception if a destination directory is
+        missing.
+    silent : bool, optional
+        Supress displaying anything, except if ``dry_run`` is used.
+    """
+    cp_args = (source, dest)
+
+    if not silent or dry_run:
+        status('cp {0} {1}'.format(*cp_args))
+
+    if not dry_run:
+        if os.path.isfile(dest) and not clobber:
+            raise OSError('{0}: file exists'.format(dest))
+
+        with cd(os.path.dirname(dest), create=create_dirs):
+            shutil.copy2(*cp_args)

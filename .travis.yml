@@ -34,7 +34,8 @@ install:
 - conda config --set always_yes yes --set changeps1 no
 - conda config --add channels csdms-stack
 - conda config --add channels conda-forge
-- conda install python=$TRAVIS_PYTHON_VERSION
+- conda create -n _testing python=$TRAVIS_PYTHON_VERSION
+- source activate _testing
 - conda install -q conda-build anaconda-client sphinx
 script:
 - conda build ./conda-recipe

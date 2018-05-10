@@ -1,5 +1,5 @@
 from .prompting import prompt, status, success, error
-from .unix import cp
+from .unix import cp, ln_s
 from .contexts import cd
 
 

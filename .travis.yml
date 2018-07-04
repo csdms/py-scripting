@@ -36,7 +36,7 @@ install:
 - conda update conda
 - conda create -n _testing python=$TRAVIS_PYTHON_VERSION
 - source activate _testing
-- conda install -q conda-build anaconda-client sphinx pytest
+- conda install -q conda-build anaconda-client sphinx pytest pytest-cov coveralls
 script:
 - conda build ./conda-recipe
 - pytest --cov=pymt --cov-report= --cov-report=xml

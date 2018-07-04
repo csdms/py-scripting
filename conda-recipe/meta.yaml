@@ -1,6 +1,6 @@
 package:
   name: scripting
-  version: "0.1.1"
+  version: "0.2.0"
 
 source:
   path: ..
@@ -8,10 +8,20 @@ source:
 requirements:
   build:
     - setuptools
+    - pip
     - python
-    - nose
-    - pbr
+    - pytest
   run:
     - python
-    - nose
+    - pytest
     - six
+
+build:
+  number: 0
+  script: python -m pip install --no-deps --ignore-installed .
+
+test:
+  requires:
+    - pytest
+  commands:
+    - pytest --pyargs scripting --doctest-modules -o doctest_optionflags="NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE"

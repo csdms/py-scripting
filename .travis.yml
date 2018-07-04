@@ -36,11 +36,10 @@ install:
 - conda update conda
 - conda create -n _testing python=$TRAVIS_PYTHON_VERSION
 - source activate _testing
-- conda install -q conda-build anaconda-client sphinx
+- conda install -q conda-build anaconda-client sphinx pytest
 script:
 - conda build ./conda-recipe
-- conda install scripting nose coverage --use-local
-- nosetests --detailed-errors --exclude=examples --with-doctest --with-coverage --cover-package=scripting --verbosity=2 scripting
+- pytest --cov=pymt --cov-report= --cov-report=xml
 after_success:
 - |
   if [[ $TRAVIS_OS_NAME == "linux" ]]; then

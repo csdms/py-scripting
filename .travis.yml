@@ -39,7 +39,7 @@ install:
 - conda install -q conda-build anaconda-client sphinx pytest pytest-cov coveralls
 script:
 - conda build ./conda-recipe
-- pytest --cov=pymt --cov-report= --cov-report=xml
+- pytest --cov=scripting --cov-report= --cov-report=xml
 after_success:
 - |
   if [[ $TRAVIS_OS_NAME == "linux" ]]; then

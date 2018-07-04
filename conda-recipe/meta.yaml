@@ -24,4 +24,4 @@ test:
   requires:
     - pytest
   commands:
-    - pytest --pyargs model_metadata --doctest-modules -o doctest_optionflags="NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE"
+    - pytest --pyargs scripting --doctest-modules -o doctest_optionflags="NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE"

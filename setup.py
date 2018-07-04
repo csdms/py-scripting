@@ -1,7 +1,32 @@
 #! /usr/bin/env python
-from setuptools import setup
+from setuptools import setup, find_packages
+
+import versioneer
+
+
+def read_requirements():
+    import os
+
+    path = os.path.dirname(os.path.abspath(__file__))
+    requirements_file = os.path.join(path, "requirements.txt")
+    try:
+        with open(requirements_file, "r") as req_fp:
+            requires = req_fp.read().split()
+    except IOError:
+        return []
+    else:
+        return [require.split() for require in requires]
+
 
 setup(
-    setup_requires=['pbr>=1.9', 'setuptools>=17.1'],
-    pbr=True,
+    name="scripting",
+    version=versioneer.get_version(),
+    description="Python utilities for scripting",
+    author="Eric Hutton",
+    author_email="huttone@colorado.edu",
+    url="http://csdms.colorado.edu",
+    install_requires=read_requirements(),
+    setup_requires=["setuptools"],
+    packages=find_packages(),
+    cmdclass=versioneer.get_cmdclass(),
 )

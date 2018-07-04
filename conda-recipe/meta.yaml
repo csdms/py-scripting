@@ -10,10 +10,10 @@ requirements:
     - setuptools
     - pip
     - python
-    - nose
+    - pytest
   run:
     - python
-    - nose
+    - pytest
     - six
 
 build:

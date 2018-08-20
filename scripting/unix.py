@@ -245,7 +245,7 @@ def cp(source, dest, dry_run=False, clobber=True, create_dirs=False,
         elif os.path.islink(dest):
             os.remove(dest)
 
-        with cd(os.path.dirname(dest), create=create_dirs):
+        with cd(os.path.dirname(dest) or ".", create=create_dirs):
             shutil.copy2(*cp_args)
 
 

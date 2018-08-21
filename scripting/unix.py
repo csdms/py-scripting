@@ -15,12 +15,12 @@ from .contexts import cd
 
 def is_linux():
     """Check if machine is linux."""
-    return platform.system() == 'Linux'
+    return platform.system() == "Linux"
 
 
 def is_osx():
     """Check if machine is OSX."""
-    return platform.system() == 'Darwin'
+    return platform.system() == "Darwin"
 
 
 def is_unix():
@@ -46,15 +46,15 @@ def is_executable(prog):
 
 
 def check_output(*args, **kwds):
-    kwds.setdefault('stdout', subprocess.PIPE)
+    kwds.setdefault("stdout", subprocess.PIPE)
     return subprocess.Popen(*args, **kwds).communicate()[0]
 
 
 def system(*args, **kwds):
-    verbose = kwds.pop('verbose', True)
-    kwds.setdefault('stdout', sys.stderr)
+    verbose = kwds.pop("verbose", True)
+    kwds.setdefault("stdout", sys.stderr)
 
-    status(' '.join(args[0]))
+    status(" ".join(args[0]))
 
     if verbose:
         call = subprocess.check_call
@@ -64,7 +64,7 @@ def system(*args, **kwds):
     try:
         call(*args, **kwds)
     except subprocess.CalledProcessError:
-        error('Unable to run command: {cmd}'.format(cmd=' '.join(args[0])))
+        error("Unable to run command: {cmd}".format(cmd=" ".join(args[0])))
         raise
 
 
@@ -81,8 +81,9 @@ def which(prog, env=None):
     prog = os.environ.get(env or prog.upper(), prog)
 
     try:
-        prog = subprocess.check_output(['which', prog],
-                                       stderr=open('/dev/null', 'w')).strip()
+        prog = subprocess.check_output(
+            ["which", prog], stderr=open("/dev/null", "w")
+        ).strip()
     except subprocess.CalledProcessError:
         return None
     else:
@@ -93,13 +94,13 @@ def checksum(path):
     import hashlib
 
     hasher = hashlib.md5()
-    with open(path, 'r') as contents:
+    with open(path, "r") as contents:
         hasher.update(contents.read())
 
     return hasher.hexdigest()
 
 
-def wc_l(fname, with_wc='wc'):
+def wc_l(fname, with_wc="wc"):
     """Count the lines in a file.
 
     Parameters
@@ -116,8 +117,7 @@ def wc_l(fname, with_wc='wc'):
 
     """
     try:
-        n_lines = subprocess.check_output(
-            [with_wc, '-l', fname])
+        n_lines = subprocess.check_output([with_wc, "-l", fname])
     except Exception:
         raise
     else:
@@ -143,14 +143,14 @@ def sensible_name_sort(names):
     >>> sensible_name_sort(['file1.txt', 'file10.txt', 'file2.txt'])
     ['file1.txt', 'file2.txt', 'file10.txt']
     """
-    REGEX = '(?P<prefix>[\D]*)(?P<num>[\d]*)(?P<suffix>[\D]*)'
+    REGEX = "(?P<prefix>[\D]*)(?P<num>[\d]*)(?P<suffix>[\D]*)"
     p = re.compile(REGEX)
 
     keys = []
     for name in names:
         m = p.match(name)
         try:
-            key = int(m.group('num'))
+            key = int(m.group("num"))
         except ValueError:
             key = 0
         finally:
@@ -160,7 +160,7 @@ def sensible_name_sort(names):
     return [key[1] for key in keys]
 
 
-def tail(fname, n=10, with_tail='tail'):
+def tail(fname, n=10, with_tail="tail"):
     """Get the last lines in a file.
 
     Parameters
@@ -180,10 +180,9 @@ def tail(fname, n=10, with_tail='tail'):
     """
     fname = os.path.abspath(fname)
     try:
-        lines = subprocess.check_output(
-            [with_tail, '-n{n}'.format(n=n), fname])
+        lines = subprocess.check_output([with_tail, "-n{n}".format(n=n), fname])
     except subprocess.CalledProcessError:
-        raise RuntimeError('Unable to get status. Please try again.')
+        raise RuntimeError("Unable to get status. Please try again.")
     except Exception:
         raise
     else:
@@ -200,20 +199,20 @@ def hostname():
 
     """
     import socket
+
     return socket.getfqdn()
 
 
 def glob_cp(pattern, dest):
     if not os.path.isdir(dest):
-        raise ValueError('{dest}: not a directory'.format(dest=dest))
+        raise ValueError("{dest}: not a directory".format(dest=dest))
 
     for fname in glob.glob(pattern):
-        status('cp {src} {dest}'.format(src=fname, dest=dest))
+        status("cp {src} {dest}".format(src=fname, dest=dest))
         shutil.copy2(fname, dest)
 
 
-def cp(source, dest, dry_run=False, clobber=True, create_dirs=False,
-       silent=False):
+def cp(source, dest, dry_run=False, clobber=True, create_dirs=False, silent=False):
     """Copy file from source to destination.
 
     Parameters
@@ -237,20 +236,20 @@ def cp(source, dest, dry_run=False, clobber=True, create_dirs=False,
     cp_args = (source, dest)
 
     if not silent or dry_run:
-        status('cp {0} {1}'.format(*cp_args))
+        status("cp {0} {1}".format(*cp_args))
 
     if not dry_run:
         if os.path.isfile(dest) and not clobber:
-            raise OSError('{0}: file exists'.format(dest))
+            raise OSError("{0}: file exists".format(dest))
         elif os.path.islink(dest):
             os.remove(dest)
 
-        with cd(os.path.dirname(dest), create=create_dirs):
-            shutil.copy2(*cp_args)
+        with cd(os.path.dirname(dest) or ".", create=create_dirs):
+            pass
+        shutil.copy2(*cp_args)
 
 
-def ln_s(source, dest, dry_run=False, clobber=True, create_dirs=False,
-         silent=False):
+def ln_s(source, dest, dry_run=False, clobber=True, create_dirs=False, silent=False):
     """Link file from source to destination.
 
     Parameters
@@ -274,14 +273,15 @@ def ln_s(source, dest, dry_run=False, clobber=True, create_dirs=False,
     ln_args = (source, dest)
 
     if not silent or dry_run:
-        status('ln -s {0} {1}'.format(*ln_args))
+        status("ln -s {0} {1}".format(*ln_args))
 
     if not dry_run:
         if os.path.isfile(dest):
             if clobber:
                 os.remove(dest)
             else:
-                raise OSError('{0}: file exists'.format(dest))
+                raise OSError("{0}: file exists".format(dest))
 
-        with cd(os.path.dirname(dest), create=create_dirs):
-            os.symlink(*ln_args)
+        with cd(os.path.dirname(dest) or ".", create=create_dirs):
+            pass
+        os.symlink(*ln_args)

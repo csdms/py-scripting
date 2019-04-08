@@ -34,7 +34,7 @@ def prompt(msg, default=None, batch_mode=False):
     resp = None
     while not isinstance(resp, bool):
         term_print(green(RAISED_HAND), end=" ")
-        resp = raw_input(msg) or default
+        resp = input(msg) or default
         if resp in ("y", "n"):
             resp = resp == "y"
 

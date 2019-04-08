@@ -55,8 +55,7 @@ lint: ## check style with flake8
 
 pretty: ## reformat files to make them look pretty
 	find scripting -name '*.py' | xargs isort
-	find tests -name '*.py' | xargs isort
-	black setup.py scripting tests
+	black setup.py scripting
 
 test: ## run tests quickly with the default Python
 	py.test

@@ -1,16 +1,16 @@
 #! /usr/bin/env python
 from __future__ import print_function
 
-import os
-import sys
-import subprocess
-import platform
-import shutil
 import glob
+import os
+import platform
 import re
+import shutil
+import subprocess
+import sys
 
-from .prompting import error, status
 from .contexts import cd
+from .prompting import error, status
 
 
 def is_linux():

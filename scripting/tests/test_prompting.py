@@ -1,7 +1,7 @@
-from scripting import status, success, error
+from scripting import error, status, success
 
 
 def test_utf8_encoding():
-    status('hi')
-    success('yay!')
-    error('boo!')
+    status("hi")
+    success("yay!")
+    error("boo!")

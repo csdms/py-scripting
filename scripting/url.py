@@ -5,7 +5,7 @@ import shutil
 from six.moves import urllib
 
 
-def download_url(url, dest, md5=None, cache='.'):
+def download_url(url, dest, md5=None, cache="."):
     dest = os.path.abspath(os.path.join(cache, dest))
 
     if os.path.exists(dest):
@@ -21,9 +21,7 @@ def download_url(url, dest, md5=None, cache='.'):
     except urllib.error.URLError as error:
         raise
     else:
-        with open(dest, 'w') as destination:
+        with open(dest, "w") as destination:
             shutil.copyfileobj(response, destination)
 
     return os.path.abspath(dest)
-
-

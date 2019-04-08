@@ -31,7 +31,7 @@ def git_repo_sha(url, git=None, branch="master"):
     url : str
         Repository URL.
     git : str, optional
-        The `git` executable to use (default is None).   
+        The `git` executable to use (default is None).
     branch : str, optional
         Repository branch to access (default is 'master').
 
@@ -60,9 +60,9 @@ def git_clone(url, git=None, dir=".", branch="master"):
     url : str
         Repository URL.
     git : str, optional
-        The `git` executable to use (default is None).   
+        The `git` executable to use (default is None).
     dir : str, optional
-        Directory in which repo is cloned (default is '.').   
+        Directory in which repo is cloned (default is '.').
     branch : str, optional
         Repository branch to access (default is 'master').
 
@@ -101,7 +101,7 @@ def git_pull(url, dir=".", branch="master"):
     url : str
         Repository URL.
     dir : str, optional
-        Directory in which repo is cloned (default is '.').   
+        Directory in which repo is cloned (default is '.').
     branch : str, optional
         Repository branch to access (default is 'master').
 
@@ -132,7 +132,7 @@ def git_clone_or_update(url, dir=".", branch="master"):
     url : str
         Repository URL.
     dir : str, optional
-        Directory in which repo is cloned (default is '.').   
+        Directory in which repo is cloned (default is '.').
     branch : str, optional
         Repository branch to access (default is 'master').
 

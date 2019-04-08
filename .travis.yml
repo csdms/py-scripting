@@ -14,10 +14,6 @@ env:
 sudo: false
 jobs:
   include:
-    - stage: test
-      script:
-      - conda build ./conda-recipe
-      - pytest --cov=scripting --cov-report= --cov-report=xml
     - stage: deploy
       if: tag =~ ^v*
       script: skip

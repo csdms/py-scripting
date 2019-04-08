@@ -1,6 +1,6 @@
 import os
 
-from scripting import cd, cp
+from scripting import cp
 
 
 def test_cp(tmpdir):

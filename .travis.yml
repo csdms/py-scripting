@@ -19,6 +19,8 @@ jobs:
     script: skip
     os: linux
     deploy:
+      on:
+        all_branches: true
       provider: pypi
       user: mcflugen
       password:

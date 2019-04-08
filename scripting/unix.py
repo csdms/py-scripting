@@ -143,7 +143,7 @@ def sensible_name_sort(names):
     >>> sensible_name_sort(['file1.txt', 'file10.txt', 'file2.txt'])
     ['file1.txt', 'file2.txt', 'file10.txt']
     """
-    REGEX = "(?P<prefix>[\D]*)(?P<num>[\d]*)(?P<suffix>[\D]*)"
+    REGEX = r"(?P<prefix>[\D]*)(?P<num>[\d]*)(?P<suffix>[\D]*)"
     p = re.compile(REGEX)
 
     keys = []

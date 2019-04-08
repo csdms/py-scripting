@@ -4,26 +4,25 @@ os:
 - osx
 env:
   matrix:
-  - TRAVIS_PYTHON_VERSION="2.7"
-  - TRAVIS_PYTHON_VERSION="3.6"
-  - TRAVIS_PYTHON_VERSION="3.7"
-  global:
-  - CONDA_PREFIX=$HOME/miniconda
-  - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda3-latest"
-  - secure: aS3HkS1Y8LEhcGhia3YPQoRqsqFbiy3GlXEMtzFxqhIv5U2egCibmQLVwN5hoJzV/HVZSSPkAC0QGy7Gh6DGbzS1SbsVozF/ryqfIbEGaxQt7y/3/2zVw4chWFyVg2ml7k3B05bp+GS2ok+y5aMexBedskg8RTceS7al3t+Q429GDYgjjxdTZDLMGFeyPzG1gHWDbJarB8sz//68O4ZHYHptXxtCgRKOW19dCuT7getPA6VLpNGCIrtuZS5UFsVNg20kGjAsYh3TOAR6VW8lx91lDxeMpeVxxszXedc+NLcqMEcMERrGVIwia0+jnQswS+XX5Hd9JiiuoN9AYxgVOraoVH965Sirbo2kGZyofB79bHmRXjj0RBOA3Ju2Y3NxzXTCT/8I6AeRkzCgtSl4Tl+wZ/3/CgdkLOttQ3RW0cAmItas0FYGI83Gn55LiPi7FmoXPjzD5E1DrvUiRBGlX7b/o2P2K0tdKjE67Vl+L7IDZ0CpMSM7K3Ij8lpsg+PgIThnSxSXsI3oW1MRRAQdBvM+zRS06fJdfwz86unGewGNrI4GktZeIxqtMtcEtMA/MwJx1R9Ib/hD6fuPFhNgsTnAD7q1li1ZvDlYZqz3CAs2EcjkhMRf+TnT3IHgl742J5nURvZuKO7zWqSfrczP9VZUNe8QfV/BIBaGC6FV3j4=
+  - CONDA_ENV=py36
+  - CONDA_ENV=py37
+  - CONDA_ENV=lint
+matrix:
+  exclude:
+  - os: osx
+    env: CONDA_ENV=lint
 sudo: false
 jobs:
   include:
-    - stage: deploy
-      if: tag =~ ^v*
-      script: skip
-      os: linux
-      deploy: &pypi
-        provider: pypi
-        user: "Your username"
-        password:
-          secure: "Your encrypted password"
-
+  - stage: deploy
+    if: tag =~ v.*$
+    script: skip
+    os: linux
+    deploy:
+      provider: pypi
+      user: mcflugen
+      password:
+        secure: WUIr1L4mdNRvFvwhINN6AiX3dYXvxqho0hX67OpyBBoF2L0MkNqAF36BOsVlw2zqReBkSAF1x/duI1tyS+ekuL9mwB0X8k/21vfWg42A1kYWhb0FRnLImU7MtXz+WKwMhTWPR4OYcGLjrqXODioLRvpvVgjZVmHBallnvuYsr8XsHttguJpllv05RkAK7bpmW1FjLXcsnqg3UND5IwNOjVFn7lhs/EW43koZlxCfqwxFYoTnDawEnAth7MGynlZ/vd0K5zvdx+0amyZ/R4kIv2w3z2c+b4KEJz6WGhOMNRAfykbRQCcpPm6KF+W0ZmPeQr7uvXn9rGjy2UcxsvRwVpu22KFgBukfmogrFVWcqwBIOHhGkifiYlFwId8yPnUQjwOjP++ZzMe4sqgkPTkuDnTQuD42lkUWZRuOGepPxV5L743/VL4Xc3XrGWX4YR7FRAwQwN+Y9PQ5K2e6OMCAP6X59MUjxeY+w1vyDQxw0GZM+sBe9CIl9FwLOwQ7hTVWDgviMixqXIWigQzfdOndKR7Khar1Ymn9T2ak/Pd5e4xecg5pdqD+K17KpuHjbYB0TgL9cOmJOX0oKqow6dve+YGl4iIiXakW2My9eGxc6uYljAWraD9DA1jOS/HVF1pVvY1AdTIAFEYw6ARTJ6U/iMIsVObuXUrp4d5ag7iRGm8=
 before_install:
 - |
   if [[ $TRAVIS_OS_NAME == "osx" ]]; then
@@ -34,31 +33,30 @@ before_install:
 install:
 - |
   if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    OS="MacOSX-x86_64"
+    curl https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh > $HOME/miniconda.sh
   else
-    OS="Linux-x86_64"
+    curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh > $HOME/miniconda.sh
   fi
-- curl $MINICONDA_URL_BASE-$OS.sh > $HOME/minconda.sh
-- bash $HOME/minconda.sh -b -p $CONDA_PREFIX
-- export PATH="$CONDA_PREFIX/bin:$PATH"
+- bash $HOME/miniconda.sh -b -p $HOME/anaconda
+- export PATH="$HOME/anaconda/bin:$PATH"
 - hash -r
 - conda config --set always_yes yes --set changeps1 no
-- conda config --add channels csdms-stack
-- conda config --add channels conda-forge
-- conda update conda
-- conda create -n _testing python=$TRAVIS_PYTHON_VERSION
-- source activate _testing
-- conda install -q conda-build anaconda-client sphinx pytest pytest-cov coveralls
-script:
-- conda build ./conda-recipe
-- pytest --cov=scripting --cov-report= --cov-report=xml
-after_success:
 - |
-  if [[ $TRAVIS_OS_NAME == "linux" ]]; then
-    conda install -q coverage coveralls
-    coveralls --verbose
+  if [[ "$CONDA_ENV" == "docs" ]]; then
+    conda env create -n test_env --file docs/environment.yml
+  else
+    conda env create -n test_env --file ci/requirements-$CONDA_ENV-$TRAVIS_OS_NAME.yml
   fi
-- curl https://raw.githubusercontent.com/csdms/ci-tools/master/anaconda_upload.py
-  > $HOME/anaconda_upload.py
-- echo $ANACONDA_TOKEN | python $HOME/anaconda_upload.py ./conda-recipe --channel=main --org=csdms
-  --token=-
+- source activate test_env
+- pip install .
+script:
+- |
+  if [[ "$CONDA_ENV" == "lint" ]]; then
+    make lint
+  elif [[ "$CONDA_ENV" == "docs" ]]; then
+    sphinx-apidoc --force -o docs/api scripting *tests
+    make -C docs clean html
+  else
+    pytest --cov=scripting --cov-report=xml:$(pwd)/coverage.xml -vvv
+  fi
+after_success: coveralls

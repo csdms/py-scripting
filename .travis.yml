@@ -4,8 +4,8 @@ os:
 - osx
 env:
   matrix:
-  - CONDA_ENV=py36
-  - CONDA_ENV=py37
+  - CONDA_ENV=3.6
+  - CONDA_ENV=3.7
   - CONDA_ENV=lint
 matrix:
   exclude:
@@ -47,10 +47,10 @@ install:
   if [[ "$CONDA_ENV" == "docs" ]]; then
     conda env create -n test_env --file docs/environment.yml
   else
-    conda env create -n test_env --file ci/requirements-$CONDA_ENV-$TRAVIS_OS_NAME.yml
+    conda env create -n test_env python=$CONDA_ENV
   fi
 - source activate test_env
-- pip install .
+- pip install . -r requirements.txt
 script:
 - |
   if [[ "$CONDA_ENV" == "lint" ]]; then

@@ -1,11 +1,11 @@
 #! /usr/bin/env python
-import os
-import sys
-import shutil
-import tempfile
 import errno
+import os
+import shutil
+import sys
+import tempfile
 
-from .prompting import status, prompt
+from .prompting import prompt, status
 from .termcolors import blue
 
 
@@ -23,19 +23,19 @@ class homebrew_hidden(object):
 
     """Context that temporarily hides the homebrew folders on Mac."""
 
-    def __init__(self, prefix='/usr/local', prompt=False):
+    def __init__(self, prefix="/usr/local", prompt=False):
         self._prefix = prefix
-        self._folders = ('bin', 'lib', 'include', )
+        self._folders = ("bin", "lib", "include")
         self._folders_hidden = set()
         self._prompt = prompt
 
     def __enter__(self):
         folders_to_hide = set()
-        if sys.platform == 'darwin':
-            if not self._prompt or prompt('OK to hide homebrew folders'):
+        if sys.platform == "darwin":
+            if not self._prompt or prompt("OK to hide homebrew folders"):
                 for folder in self._folders:
                     orig = os.path.join(self._prefix, folder)
-                    folders_to_hide.add((orig, orig + '.hide'))
+                    folders_to_hide.add((orig, orig + ".hide"))
 
         for (orig, hidden) in folders_to_hide:
             try:
@@ -43,12 +43,12 @@ class homebrew_hidden(object):
             except Exception:
                 pass
             else:
-                status('moving: {src} -> {dest}'.format(src=orig, dest=hidden))
+                status("moving: {src} -> {dest}".format(src=orig, dest=hidden))
                 self._folders_hidden.add((orig, hidden))
 
     def __exit__(self, ex_type, ex_value, traceback):
         for (orig, hidden) in self._folders_hidden:
-            status('moving: {dest} -> {src}'.format(src=orig, dest=hidden))
+            status("moving: {dest} -> {src}".format(src=orig, dest=hidden))
             shutil.move(hidden, orig)
 
 
@@ -130,7 +130,7 @@ class cdtemp(object):
     """
 
     def __init__(self, **kwds):
-        self._cleanup = kwds.pop('cleanup', True)
+        self._cleanup = kwds.pop("cleanup", True)
         self._kwds = kwds
         self._tmp_dir = None
 
@@ -173,7 +173,7 @@ def env_to_str(env=None):
     keys = list(env.keys())
     keys.sort()
     for key in keys:
-        lines.append('{k}={v}'.format(k=key, v=env[key]))
+        lines.append("{k}={v}".format(k=key, v=env[key]))
 
     return os.linesep.join(lines)
 
@@ -191,7 +191,7 @@ class setenv(object):
         _reset_env(env=self._env)
 
         if self._verbose:
-            status('switching to this environment:')
+            status("switching to this environment:")
             print(blue(env_to_str()))
 
     def __exit__(self, type, value, traceback):
@@ -201,6 +201,8 @@ class setenv(object):
 class empty_env(setenv):
     def __init__(self, verbose=False):
         env = {
-            'PATH': os.pathsep.join(['/usr/bin', '/bin', '/usr/sbin', '/etc',
-                                     '/usr/lib', ]), }
+            "PATH": os.pathsep.join(
+                ["/usr/bin", "/bin", "/usr/sbin", "/etc", "/usr/lib"]
+            )
+        }
         super(empty_env, self).__init__(env, verbose=verbose)

@@ -1,16 +1,16 @@
 #! /usr/bin/env python
 from __future__ import print_function
 
-import os
-import sys
-import subprocess
-import platform
-import shutil
 import glob
+import os
+import platform
 import re
+import shutil
+import subprocess
+import sys
 
-from .prompting import error, status
 from .contexts import cd
+from .prompting import error, status
 
 
 def is_linux():
@@ -143,7 +143,7 @@ def sensible_name_sort(names):
     >>> sensible_name_sort(['file1.txt', 'file10.txt', 'file2.txt'])
     ['file1.txt', 'file2.txt', 'file10.txt']
     """
-    REGEX = "(?P<prefix>[\D]*)(?P<num>[\d]*)(?P<suffix>[\D]*)"
+    REGEX = r"(?P<prefix>[\D]*)(?P<num>[\d]*)(?P<suffix>[\D]*)"
     p = re.compile(REGEX)
 
     keys = []

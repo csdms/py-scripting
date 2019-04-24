@@ -4,16 +4,16 @@ os:
 - osx
 env:
   matrix:
-  - CONDA_ENV=py36
-  - CONDA_ENV=py37
-  - CONDA_ENV=lint
-matrix:
-  exclude:
-  - os: osx
-    env: CONDA_ENV=lint
+  - CONDA_ENV=3.7
+  - CONDA_ENV=3.6
 sudo: false
 jobs:
   include:
+  - stage: lint
+    os: linux
+    script:
+    - pip install flake8
+    - make lint
   - stage: deploy
     if: tag =~ v.*$
     script: skip
@@ -32,7 +32,6 @@ before_install:
     brew cleanup -s
     rm -rf $(brew --cache)
   fi
-install:
 - |
   if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     curl https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh > $HOME/miniconda.sh
@@ -43,22 +42,10 @@ install:
 - export PATH="$HOME/anaconda/bin:$PATH"
 - hash -r
 - conda config --set always_yes yes --set changeps1 no
-- |
-  if [[ "$CONDA_ENV" == "docs" ]]; then
-    conda env create -n test_env --file docs/environment.yml
-  else
-    conda env create -n test_env --file ci/requirements-$CONDA_ENV-$TRAVIS_OS_NAME.yml
-  fi
+- conda create -n test_env python=$CONDA_ENV
 - source activate test_env
+install:
 - pip install . -r requirements.txt
 script:
-- |
-  if [[ "$CONDA_ENV" == "lint" ]]; then
-    make lint
-  elif [[ "$CONDA_ENV" == "docs" ]]; then
-    sphinx-apidoc --force -o docs/api scripting *tests
-    make -C docs clean html
-  else
-    pytest --cov=scripting --cov-report=xml:$(pwd)/coverage.xml -vvv
-  fi
+- pytest --cov=scripting --cov-report=xml:$(pwd)/coverage.xml -vvv
 after_success: coveralls

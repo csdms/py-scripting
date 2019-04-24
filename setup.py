@@ -8,6 +8,7 @@ setup(
     name="py-scripting",
     version=versioneer.get_version(),
     description="Python utilities for scripting",
+    long_description=open("README.rst").read(),
     author="Eric Hutton",
     author_email="huttone@colorado.edu",
     url="http://csdms.colorado.edu",

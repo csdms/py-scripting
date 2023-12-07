@@ -1,12 +1,10 @@
 #! /usr/bin/env python
 from setuptools import setup, find_packages
 
-import versioneer
-
 
 setup(
     name="py-scripting",
-    version=versioneer.get_version(),
+    version="0.2.5.dev0",
     description="Python utilities for scripting",
     long_description=open("README.rst").read(),
     author="Eric Hutton",
@@ -23,5 +21,4 @@ setup(
     install_requires=["six"],
     setup_requires=["setuptools"],
     packages=find_packages(),
-    cmdclass=versioneer.get_cmdclass(),
 )

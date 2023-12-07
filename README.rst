@@ -1,2 +1,4 @@
-# py-scripting
-Python scripting utilities
+py-scripting
+============
+
+Python scripting utilities.

@@ -7,6 +7,7 @@ setup(
     version="0.2.5.dev0",
     description="Python utilities for scripting",
     long_description=open("README.rst").read(),
+    long_description_content_type="text/x-rst",
     author="Eric Hutton",
     author_email="huttone@colorado.edu",
     url="http://csdms.colorado.edu",

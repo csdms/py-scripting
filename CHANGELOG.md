@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to `scripting` will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
+## 0.2.5 (2023-12-07)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 This file was auto-generated using `make_changelog.py`.

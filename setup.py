@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="py-scripting",
-    version="0.2.5",
+    version="0.2.6.dev0",
     description="Python utilities for scripting",
     long_description=open("README.rst").read(),
     long_description_content_type="text/x-rst",

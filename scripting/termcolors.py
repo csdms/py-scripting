@@ -27,10 +27,10 @@ _COLORS = [
 
 _CODES = {}
 
-for (_attr, _val) in _ATTRS.items():
+for _attr, _val in _ATTRS.items():
     _CODES[_attr] = "\x1b[" + _val
 
-for (i, (dark, light)) in enumerate(_COLORS):
+for i, (dark, light) in enumerate(_COLORS):
     _CODES[dark] = "\x1b[%im" % (i + 30)
     _CODES[light] = "\x1b[%i;01m" % (i + 30)
 

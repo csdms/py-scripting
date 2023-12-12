@@ -37,7 +37,7 @@ class homebrew_hidden(object):
                     orig = os.path.join(self._prefix, folder)
                     folders_to_hide.add((orig, orig + ".hide"))
 
-        for (orig, hidden) in folders_to_hide:
+        for orig, hidden in folders_to_hide:
             try:
                 shutil.move(orig, hidden)
             except Exception:
@@ -47,7 +47,7 @@ class homebrew_hidden(object):
                 self._folders_hidden.add((orig, hidden))
 
     def __exit__(self, ex_type, ex_value, traceback):
-        for (orig, hidden) in self._folders_hidden:
+        for orig, hidden in self._folders_hidden:
             status("moving: {dest} -> {src}".format(src=orig, dest=hidden))
             shutil.move(hidden, orig)
 

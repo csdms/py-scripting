@@ -5,11 +5,11 @@ import sys
 
 from .termcolors import green, red, yellow
 
-QUESTION_MARK = u"\u2753"
-CHECK_MARK = u"\u2713"
-BALLOT_X = u"\u2717"
-RIGHT_BACKWARDS_ARROW = u"\u27a1"
-RAISED_HAND = u"\u270B"
+QUESTION_MARK = "\u2753"
+CHECK_MARK = "\u2713"
+BALLOT_X = "\u2717"
+RIGHT_BACKWARDS_ARROW = "\u27a1"
+RAISED_HAND = "\u270B"
 
 
 def term_print(string, **kwds):

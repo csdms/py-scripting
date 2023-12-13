@@ -1,0 +1,4 @@
+include CHANGELOG.md
+include Makefile
+
+prune */__pycache__

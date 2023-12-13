@@ -1,2 +1,0 @@
-include versioneer.py
-include scripting/_version.py

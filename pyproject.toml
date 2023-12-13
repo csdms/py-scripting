@@ -18,6 +18,7 @@ maintainers = [
   {name = "The CSDMS team"},
   {email = "csdms@colorado.edu"},
 ]
+readme = "README.rst"
 keywords = [
   "python",
   "utilities",

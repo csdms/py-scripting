@@ -55,10 +55,10 @@ lint: ## check style with flake8
 
 pretty: ## reformat files to make them look pretty
 	find scripting -name '*.py' | xargs isort
-	black setup.py scripting
+	black scripting tests
 
 test: ## run tests quickly with the default Python
-	py.test
+	pytest -vvv
 
 test-all: ## run tests on every Python version with tox
 	tox
@@ -81,13 +81,16 @@ changelog:
 servedocs: docs ## compile the docs watching for changes
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
-release: dist ## package and upload a release
+release: ## create a release
+	fullrelease
+
+publish: dist ## package and upload a release
 	twine upload dist/*
 
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python -m build
 	ls -l dist
+	twine check dist/*
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	pip install -e .

@@ -17,5 +17,5 @@ jobs:
 
       - name: Lint
         run: |
-          pip install .[dev]
+          pip install flake8
           flake8 .

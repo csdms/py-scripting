@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to `scripting` will be documented in this file.
 
-## 0.2.6 (unreleased)
+## 0.2.6 (2023-12-12)
 
 - Switch from setup.py to pyproject.toml (#14)
 - Use GitHub Actions for continuous integration (#13)

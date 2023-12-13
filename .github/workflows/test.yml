@@ -30,14 +30,11 @@ jobs:
           miniforge-version: latest
           auto-update-conda: true
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
       - name: Install package
         run: |
           pip install -e .
 
       - name: Test
         run: |
+          pip install .[test]
           pytest -vvv
